@@ -15,11 +15,11 @@ ros2=false
 cuda=false
 reboot=false
 if [ $# -eq 0 ]; then
- 	read -p "Would you like to install ROS1? [Y/n]: " yn
+ 	read -p "Would you like to install ROS1? [y/N]: " yn
 	case $yn in
 		[Yy]* ) ros=true;;
 		[Nn]* ) ros=false;;
-		"" ) ros=true;;
+		"" ) ros=false;;
 		* ) ros=false;;
 	esac
 	if [ $major -ge 20 ];
@@ -83,7 +83,7 @@ if [ $major -lt 20 ];then
   ros2=false
 fi
 #Disable ipv6
-sh $SCRIPT_DIR/forceipv4_apt.sh
+sudo sh $SCRIPT_DIR/forceipv4_apt.sh
 sh $SCRIPT_DIR/mDNSfix.sh
 #Update System
 sudo apt update -y
@@ -105,7 +105,16 @@ sudo apt update -y
 #Apt install programs
 sudo apt install -y git terminator openssh-server python3-pip net-tools remmina remmina-plugin-rdp remmina-plugin-secret remmina-plugin-spice libgmock-dev google-chrome-stable apt-transport-https gnome-shell-extension-manager network-manager-openconnect-gnome mattermost-desktop
 
-if [[ $os_release == "24.04" ]]; then
+if [[ $os_release == "26.04" ]]; then
+	if $ros
+        then
+            sh $SCRIPT_DIR/ROS/install_ros_one.sh
+        fi
+	if $ros2
+	then
+	    sh $SCRIPT_DIR/ROS/install_ros2_rolling.sh
+	fi
+elif [[ $os_release == "24.04" ]]; then
 	if $ros
         then
             sh $SCRIPT_DIR/ROS/install_ros_one.sh
